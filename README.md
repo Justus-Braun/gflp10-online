@@ -1,0 +1,26 @@
+# gflp10-online
+GFLP10-Online FiveM Server
+
+To boot up server first create a setup.cfg with the following and add an licenseKey
+```
+## You CAN edit the following:
+endpoint_add_tcp "0.0.0.0:30120"
+endpoint_add_udp "0.0.0.0:30120"
+sv_maxclients 48
+set steam_webApiKey "none"
+sets tags "default, deployer"
+
+## You MAY edit the following:
+sv_licenseKey ""
+sv_hostname "GFLP10-Online built with CFX Default by Tabarra!"
+sets sv_projectName "[CFX Default] GFLP10-Online"
+sets sv_projectDesc "Recipe for the base resources required to run a minimal FiveM server."
+sets locale "root-AQ" 
+```
+
+Also create an roles.cfg file and add following
+```
+## Add system admins
+add_ace group.admin command allow # allow all commands
+add_ace group.admin command.quit deny # but don't allow quit
+````
