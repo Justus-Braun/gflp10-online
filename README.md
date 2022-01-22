@@ -4,8 +4,6 @@ GFLP10-Online FiveM Server
 To boot up server first create a setup.cfg with the following and add an licenseKey
 ```
 ## You CAN edit the following:
-endpoint_add_tcp "0.0.0.0:30120"
-endpoint_add_udp "0.0.0.0:30120"
 sv_maxclients 48
 set steam_webApiKey "none"
 sets tags "default, deployer"
