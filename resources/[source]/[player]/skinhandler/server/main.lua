@@ -1,0 +1,5 @@
+AddEventHandler('framework:server:loadPlayer', function(player)
+    print(player.id)
+    print(player.skin.head)
+    print(player.age)
+end)
