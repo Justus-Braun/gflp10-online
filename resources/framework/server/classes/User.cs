@@ -9,9 +9,14 @@ namespace server.classes
 {
     public class User
     {
-        public int Id { get; set; }
+        public User(Player player)
+        {
+            Player = player;
+        }
+        public Player Player { get; set; }
         public Account Money { get; set; }
         public Account Bank { get; set; }
         public List<Weapon> Weapons { get; set; }
+        public string Token { get; set; }
     }
 }
