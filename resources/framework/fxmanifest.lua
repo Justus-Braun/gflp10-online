@@ -11,9 +11,14 @@ shared_scripts {
 }
 
 client_scripts {
-	'client/*.lua'
+	'client/*.lua',
+	'client-token/bin/Debug/client-token.net.dll'
 }
 
 server_scripts {
-	'/server/bin/Debug/server.net.dll'
+	'server/bin/Debug/server.net.dll'
+}
+
+exports {
+	'GetToken'
 }

@@ -8,7 +8,7 @@ namespace server.classes
 {
     public class Account
     {
-        public int balance;
+        public int _balance;
         public Account(int balance)
         {
             Balance = balance;
@@ -16,7 +16,7 @@ namespace server.classes
 
         public int Balance
         {
-            get => balance;
+            get => _balance;
 
             private set
             {
@@ -25,7 +25,7 @@ namespace server.classes
                     throw new OverflowException("Account cant go negative");
                 }
 
-                balance = value;
+                _balance = value;
             }
         }
 

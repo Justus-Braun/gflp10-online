@@ -19,6 +19,7 @@ namespace server
         {
             EventHandlers["playerConnecting"] += new Action<Player, string, dynamic, dynamic>(OnPlayerConnecting);
             EventHandlers["playerJoining"] += new Action<Player, string>(OnPlayerJoin);
+            EventHandlers["playerDropped"] += new Action<Player, string>(OnPlayerDropped);
         }
 
         private async void OnPlayerConnecting([FromSource] Player player, string playerName, dynamic setKickReason, dynamic deferrals)
@@ -39,25 +40,37 @@ namespace server
         private async void OnPlayerJoin([FromSource] Player player, string oldId)
         {
             Debug.WriteLine($"Player with ID: {player.Handle} passed the Bannlist");
-
             await Delay(0);
-            
+
+            User user;
             try
             {
-                User u = await DatabaseHandler.GetUser(player);
+                user = await DatabaseHandler.GetUser(player);
             }
             catch (NotSupportedException)
             {
-                User u = new User
+                user = new User(player)
                 {
-                    Id = int.Parse(player.Handle),
                     Bank = new Account(10000),
                     Money = new Account(100),
                     Weapons = new List<Weapon>()
                 };
 
-                Program.UserList.Add(u);
+                try
+                {
+                    await DatabaseHandler.InsertPlayer(user);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                    Debug.WriteLine(e.StackTrace);
+                    player.Drop("Something went wrong please contact the Support");
+                    return;
+                }
 
+                user = await DatabaseHandler.GetUser(player);
+                
+                Program.UserList.Add(player.Handle, user);
                 player.TriggerEvent("framework:client:firstJoin");
 
                 return;
@@ -65,9 +78,29 @@ namespace server
             catch (Exception e)
             {
                 Debug.WriteLine(e.StackTrace);
+                return;
             }
 
+            Program.UserList.Add(player.Handle, user);
             player.TriggerEvent("framework:client:init");
         }
+
+        private async void OnPlayerDropped([FromSource] Player player, string reason)
+        {
+            try
+            {
+                // Save Player
+                await DatabaseHandler.UpdatePlayer(Program.UserList[player.Handle]);
+
+                // Remove Player from Server cache
+                Debug.WriteLine($"Player {player.Name} dropped (Reason: {reason}).");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                Debug.WriteLine(e.Source);
+            }
+        }
+
     }
 }
